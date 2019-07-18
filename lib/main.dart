@@ -2,9 +2,24 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride;
 
-void main() {
-  if (!identical(0, 0.0) && Platform.isMacOS)
+// needed to work on desktop
+void _desktopInitHack() {
+  // Dart is compiled to JS on web; JS and Dart have different results when comparing int and real numbers
+  // so take advantage of that fact to tell web from not-web until the platform itself can help us do so
+  bool isWeb = identical(0, 0.0);
+  if (isWeb) return; // calling anything in dart.io on the web will crash, including Platform.*
+
+  if (Platform.isMacOS) {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+  } else if (Platform.isLinux || Platform.isWindows) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  } else if (Platform.isFuchsia) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+}
+
+void main() {
+  _desktopInitHack();
   runApp(MyApp());
 }
 
@@ -13,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.red),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: MyHomePage(),
     );
   }

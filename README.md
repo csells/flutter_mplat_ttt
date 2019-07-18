@@ -22,22 +22,34 @@ Here's a composite of the app running on iOS, Android, desktop (macOS) and web:
 The multi-platform hackery part of this sample code is likely to get stale fast! For the latest instructions, see [the flutter_desktop_embedding repo](https://github.com/google/flutter-desktop-embedding) and [the flutter_web repo](https://github.com/flutter/flutter_web).
 
 ## The Trick
-As of this writing, the trick to get a simple, plugin-less Flutter app to run across mobile, macOS and web from a single source code base is a bit of hackery in the main() function of your app:
+As of this writing, the trick to get a simple, plugin-less Flutter app to run across mobile, macOS, Windows and web from a single source code base is a bit of hackery in the main() function of your app:
 
 ```dart
 import 'dart:io';
 import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride;
 
-void main() {
-  if (!identical(0, 0.0) && Platform.isMacOS)
+void _desktopInitHack() {
+  bool isWeb = identical(0, 0.0);
+  if (isWeb) return;
+
+  if (Platform.isMacOS) {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+  } else if (Platform.isLinux || Platform.isWindows) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  } else if (Platform.isFuchsia) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+}
+
+void main() {
+  _desktopInitHack();
   runApp(MyApp());
 }
 
 // the rest of your app goes here...
 ```
 
-As described in the [FDE Flutter Application Requirements](https://github.com/flutter/flutter/wiki/Desktop-shells#flutter-application-requirements), on the current desktop bits, debugDefaultTargetPlatformOverride must be set to TargetPlatform.iOS if you're running on macOS and TargetPlatform.Android otherwise. If you don't have code that does this before your Flutter code runs, you'll get a run-time exception and a blank screen when you run the app on the desktop.
+As described in the [FDE Flutter Application Requirements](https://github.com/flutter/flutter/wiki/Desktop-shells#flutter-application-requirements), on the current desktop bits, debugDefaultTargetPlatformOverride must be set to TargetPlatform.iOS if you're running on macOS and TargetPlatform.android otherwise. If you don't have code that does this before your Flutter code runs, you'll get a run-time exception and a blank screen when you run the app on the desktop.
 
 However, the web runtime doesn't like the use of dart:io at all, even the Platform.isMacOS property, and using it will cause an exception at run-time.
 
