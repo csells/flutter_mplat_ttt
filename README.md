@@ -9,9 +9,9 @@ I gave a talk at [the Portland-Area .NET User Group](http://padnug.org) recently
 [Get Flutter working on your machine first](https://flutter.dev/docs/get-started/install), download [the code](https://github.com/csells/flutter_mplat_ttt) and then run the following commands:
 
 ```shell
-$ flutter run -d iphone   # or whatever matches your iOS simulator
+$ flutter run -d iphone  # or whatever matches your iOS simulator
 $ flutter run -d android # or whatever matches your Android emulator
-$ flutter run -d macos
+$ flutter run -d macos   # or -d windows
 $ flutter run -d chrome
 ```
 Here's a composite of the app running on iOS, Android, desktop (macOS) and web:
