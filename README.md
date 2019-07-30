@@ -26,11 +26,10 @@ As of this writing, the trick to get a simple, plugin-less Flutter app to run ac
 
 ```dart
 import 'dart:io';
-import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride;
+import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride, kIsWeb;
 
 void _desktopInitHack() {
-  bool isWeb = identical(0, 0.0);
-  if (isWeb) return;
+  if (kIsWeb) return;
 
   if (Platform.isMacOS) {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
@@ -53,6 +52,6 @@ As described in the [FDE Flutter Application Requirements](https://github.com/fl
 
 However, the web runtime doesn't like the use of dart:io at all, even the Platform.isMacOS property, and using it will cause an exception at run-time.
 
-So, to keep the code from causing a run-time exception anywhere, we use a little hackery relying on the fact that Flutter for web generates JavaScript to make Dart run in the browser and that numbers are implemented differently in JavaScript then in Dart. In the fullness of time, none of this is necessary, but it's a pretty cool hack for now.
+So, to keep the code from causing a run-time exception anywhere, we use a little-known constant named kIsWeb to bail early. In the fullness of time, none of this is necessary, but it's a pretty cool hack for now.
 
 Enjoy!

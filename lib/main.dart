@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride;
+import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride, kIsWeb;
 
-// needed to work on desktop
 void _desktopInitHack() {
-  // Dart is compiled to JS on web; JS and Dart have different results when comparing int and real numbers
-  // so take advantage of that fact to tell web from not-web until the platform itself can help us do so
-  bool isWeb = identical(0, 0.0);
-  if (isWeb) return; // calling anything in dart.io on the web will crash, including Platform.*
+  if (kIsWeb) return;
 
   if (Platform.isMacOS) {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
