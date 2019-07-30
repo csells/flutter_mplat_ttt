@@ -5,6 +5,9 @@ A multi-platform Flutter sample game of tic-tac-toe.
 ## The Talk
 I gave a talk at [the Portland-Area .NET User Group](http://padnug.org) recently, built this app in a live coding demo to show off Flutter and then did a bit of hackery to make it work across mobile, desktop and web. If you're interested in how the code was created, [check out the talk on YouTube](https://youtube.com/watch?v=bbaezQE1M2U).
 
+## The Demo
+You can [run Flutter Tic-Tac-Toe](http://csells.github.io/flutter_mplat_ttt/gh_pages/index.html) in your browswer right now!
+
 ## The Code
 [Get Flutter working on your machine first](https://flutter.dev/docs/get-started/install), download [the code](https://github.com/csells/flutter_mplat_ttt) and then run the following commands:
 
