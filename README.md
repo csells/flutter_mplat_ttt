@@ -29,7 +29,9 @@ As of this writing, the trick to get a simple, plugin-less Flutter app to run ac
 
 ```dart
 import 'dart:io';
-import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride, kIsWeb;
+import 'dart:io';
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride, kIsWeb, TargetPlatform;
 
 void _desktopInitHack() {
   if (kIsWeb) return;
