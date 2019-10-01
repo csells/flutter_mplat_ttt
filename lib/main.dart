@@ -1,21 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride, kIsWeb;
-
-void _desktopInitHack() {
-  if (kIsWeb) return;
-
-  if (Platform.isMacOS) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-  } else if (Platform.isLinux || Platform.isWindows) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.android;
-  } else if (Platform.isFuchsia) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
-  }
-}
+import 'desktop-stub.dart' if (dart.library.io) 'desktop.dart';
 
 void main() {
-  _desktopInitHack();
+  setOverrideForDesktop();
   runApp(MyApp());
 }
 
@@ -52,7 +39,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool get gameOver => gameWon || gameTie;
   bool get gameTie => !moves.any((m) => m == '');
-  bool check(int i, int j, int k) => moves[i] != '' && moves[j] == moves[i] && moves[k] == moves[i];
+  bool check(int i, int j, int k) =>
+      moves[i] != '' && moves[j] == moves[i] && moves[k] == moves[i];
   bool get gameWon {
     if (check(0, 1, 2)) return true;
     if (check(3, 4, 5)) return true;
@@ -111,7 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
     await showDialog(
       context: this.context,
       builder: (_) => AlertDialog(
-        title: Center(child: Text(gameWon ? '$currentPlayer won!' : 'tie game')),
+        title:
+            Center(child: Text(gameWon ? '$currentPlayer won!' : 'tie game')),
       ),
     );
 
