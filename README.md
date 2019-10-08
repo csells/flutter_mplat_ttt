@@ -12,10 +12,12 @@ You can [run Flutter Tic-Tac-Toe](http://csells.github.io/flutter_mplat_ttt/gh_p
 [Get Flutter working on your machine first](https://flutter.dev/docs/get-started/install), download [the code](https://github.com/csells/flutter_mplat_ttt) and then run the following commands:
 
 ```shell
+$ flutter channel master # you need the latest and greatest bits for this to work
+$ flutter upgrade        # you're living on the cutting edge now!
 $ flutter run -d iphone  # or whatever matches your iOS simulator
 $ flutter run -d android # or whatever matches your Android emulator
 $ flutter run -d macos   # or -d windows
-$ flutter run -d chrome
+$ flutter run -d chrome  # to run the web version
 ```
 Here's a composite of the app running on iOS, Android, desktop (macOS) and web:
 
