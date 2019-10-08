@@ -29,7 +29,20 @@ As of this writing, the trick to get a simple, plugin-less Flutter app to run ac
 
 ```dart
 // main.dart
-import 'desktop-stub.dart' if (dart.library.io) 'desktop.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
+void setOverrideForDesktop() {
+  if (kIsWeb) return;
+
+  if (Platform.isMacOS) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+  } else if (Platform.isLinux || Platform.isWindows) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  } else if (Platform.isFuchsia) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+}
 
 void main() {
   setOverrideForDesktop();
@@ -39,34 +52,11 @@ void main() {
 // the rest of your app goes here...
 ```
 
-That funny ```import``` statement with the ```if``` clause is  a little known feature in Dart called conditional imports. Conditional imports allows us to import one file in the case that the library in question is supported by the target platform during compilation, ```dart.library.io``` aka ```dart:io``` in our case. If ```dart:io``` is suppported, which it is for mobile and desktop apps but NOT for web apps, we import ```desktop.dart```, which contains a useful implementation of ```setOverrideForDesktop()```:
-
-```dart
-// desktop.dart
-import 'dart:io';
-import 'package:flutter/foundation.dart';
-
-void setOverrideForDesktop() {
-  if (Platform.isMacOS) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-  } else if (Platform.isLinux || Platform.isWindows) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.android;
-  }
-}
-```
-
 As described in the [FDE Flutter Application Requirements](https://github.com/flutter/flutter/wiki/Desktop-shells#flutter-application-requirements), on the current desktop bits, ```debugDefaultTargetPlatformOverride```
 must be set to ```TargetPlatform.iOS``` if you're running on macOS and ```TargetPlatform.android``` for Windows or Linux. If you don't have code that does this before your Flutter code runs, you'll get a run-time exception and a blank screen when you run the app on the desktop.
 
-On the other hand, the web runtime doesn't support the use of ```dart:io``` at all, even the ```Platform``` properties, and using it will cause an exception at run-time. Further, as of this writing, even importing ```dart:io``` will cause the compiler to fail to create that file. In that case, our conditional import brings in a stub implementation of ```setOverrideForDesktop()``` from ```desktop-stub.dart```:
+On the other hand, the web runtime doesn't support the use of ```dart:io``` at all, even the ```Platform``` properties, and using it will cause an exception at run-time. For that reason, we check ``kIsWeb`` to see if we're running in a browser and duck out early if we are.
 
-```dart
-// desktop-stub.dart
-
-void setOverrideForDesktop() {}
-```
-
-So, when compiling for the web, we import a file w/o any of the stuff it doesn't like and when we're compiling for 
-mobile or desktop, we can set up the ```debugDefaultTargetPlatformOverride``` required to run desktop apps today. In the fullness of time, none of this is necessary, but it's a pretty cool hack for now.
+In the fullness of time, none of this is necessary, but it's a pretty cool hack for now.
 
 Enjoy!
